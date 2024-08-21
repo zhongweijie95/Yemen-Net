@@ -27,6 +27,8 @@ class YCard(ft.Container):
         self.account_status = ft.CircleAvatar(bgcolor=ft.colors.GREEN, radius=6, visible=False)
         self.account_type = ft.Text(size = 11, text_align="center")
 
+        self.margin = ft.margin.only(top=25)
+
         self.content = ft.Card(
             height=200,
             elevation=6,
@@ -80,7 +82,7 @@ class YCard(ft.Container):
                             ),
                             self.account_type,
                             ft.Container(
-                                margin=ft.margin.only(top=25),
+                                margin=ft.margin.only(top=20),
                                 content=self.account_expir_date,
                                 alignment=ft.alignment.bottom_center
                             )
