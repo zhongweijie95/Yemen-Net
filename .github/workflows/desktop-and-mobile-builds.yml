@@ -18,14 +18,73 @@ on:
 env:
   # https://flet.dev/docs/publish#versioning
   BUILD_NUMBER: 3
-  BUILD_VERSION: 2.0.0
-  PYTHON_VERSION: 3.12.2
-  FLUTTER_VERSION: 3.22.2
+  BUILD_VERSION: 3.0.0
+  PYTHON_VERSION: 3.12.5
+  FLUTTER_VERSION: 3.24.0 # 3.22.5, 3.24.5
+  ANDROID_PLATFORM_TARGET: "arm64" # arm, arm64, x64, x86
+  LINUX_PLATFORM_TARGET: "x64" # arm64
+
+  ORG_NAME: "com.omamkaz.yemennet"
   COMPANY_NAME: "omamkaz"
-  SPLASH_COLOR: "#FFBF00"
-  SPLASH_DARK_COLOR: "#FFBF00"
-  
+  PRODUCT: "الاستعلام عن رصيد يمن نت"
+  DESCRIPTION: "الاستعلام من رصيد يمن نت, بالأضافة الى بعض الخدمات و الاضافات الاخرى"
+  PROJECT: "Yemen Net"
+
 jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Setup Python Environment and Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4.2.1
+      with:
+        distribution: 'temurin'
+        java-version: '22' # 21
+
+    - name: Flet Build APK
+      run: |
+        flutter config --no-analytics
+        flet build apk \
+        --verbose \
+        --build-number=$BUILD_NUMBER \
+        --build-version=$BUILD_VERSION \
+        --company=$COMPANY_NAME \
+        --org=$ORG_NAME \
+        --product=$PROJECT \
+        --description=$DESCRIPTION \
+        --project=$PROJECT \
+        --flutter-build-args=--release \
+        --flutter-build-args=--analyze-size \
+        --flutter-build-args=--target-platform \
+        --flutter-build-args=android-$ANDROID_PLATFORM_TARGET
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: apk-build-artifact
+        path: build/apk
+        if-no-files-found: warn
+        overwrite: false
+
   build-linux:
     runs-on: ubuntu-latest
 
@@ -57,49 +116,26 @@ jobs:
 
     - name: Flet Build Linux
       run: |
-        flutter config --no-analytics 
-        flet build linux --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION
+        flutter config --no-analytics
+        flet build linux \
+        --verbose \
+        --build-number=$BUILD_NUMBER \
+        --build-version=$BUILD_VERSION \
+        --company=$COMPANY_NAME \
+        --org=$ORG_NAME \
+        --product=$PROJECT \
+        --description=$DESCRIPTION \
+        --project=$PROJECT \
+        --flutter-build-args=--release \
+        --flutter-build-args=--analyze-size \
+        --flutter-build-args=--target-platform \
+        --flutter-build-args=linux-$LINUX_PLATFORM_TARGET
 
     - name: Upload Linux Artifact
       uses: actions/upload-artifact@v4.3.4
       with:
         name: linux-build-artifact
         path: build/linux
-        if-no-files-found: warn
-        overwrite: false
-
-  build-macos:
-    runs-on: macos-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-
-    - name: Install Python Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
-
-    - name: Flet Build macOS
-      run: |
-        flutter config --no-analytics
-        flet build macos --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION
-
-    - name: Upload macOS Artifact
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: macos-build-artifact
-        path: build/macos
         if-no-files-found: warn
         overwrite: false
 
@@ -128,13 +164,68 @@ jobs:
     - name: Flet Build Windows
       run: |
         flutter config --no-analytics
-        flet build windows --verbose --no-rich-output --build-number=$env:BUILD_NUMBER --build-version=$env:BUILD_VERSION
+        flet build windows \
+        --verbose \
+        --no-rich-output \
+        --build-number=$env:BUILD_NUMBER \
+        --build-version=$env:BUILD_VERSION \
+        --company=$env:COMPANY_NAME \
+        --org=$env:ORG_NAME \
+        --product=$env:PROJECT \
+        --description=$env:DESCRIPTION \
+        --project=$env:PROJECT \
+        --flutter-build-args=--release \
+        --flutter-build-args=--analyze-size
 
     - name: Upload Windows Artifact
       uses: actions/upload-artifact@v4.3.4
       with:
         name: windows-build-artifact
         path: build/windows
+        if-no-files-found: warn
+        overwrite: false
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+
+    - name: Flet Build macOS
+      run: |
+        flutter config --no-analytics
+        flet build macos \
+        --verbose \
+        --build-number=$BUILD_NUMBER \
+        --build-version=$BUILD_VERSION \
+        --company=$COMPANY_NAME \
+        --org=$ORG_NAME \
+        --product=$PROJECT \
+        --description=$DESCRIPTION \
+        --project=$PROJECT \
+        --flutter-build-args=--release
+
+    - name: Upload macOS Artifact
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: macos-build-artifact
+        path: build/macos
         if-no-files-found: warn
         overwrite: false
 
@@ -163,63 +254,22 @@ jobs:
     - name: Flet Build AAB
       run: |
         flutter config --no-analytics
-        flet build aab --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION
+        flet build aab \
+        --verbose \
+        --build-number=$BUILD_NUMBER \
+        --build-version=$BUILD_VERSION \
+        --company=$COMPANY_NAME \
+        --org=$ORG_NAME \
+        --product=$PROJECT \
+        --description=$DESCRIPTION \
+        --project=$PROJECT \
+        --flutter-build-args=--release
 
     - name: Upload AAB Artifact
       uses: actions/upload-artifact@v4.3.4
       with:
         name: aab-build-artifact
         path: build/aab
-        if-no-files-found: warn
-        overwrite: false
-
-  build-apk:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-
-    - name: Install Python Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
-
-    - name: Setup Java JDK
-      uses: actions/setup-java@v4.2.1
-      with:
-        distribution: 'temurin'
-        java-version: '21'
-
-    - name: Flet Build APK
-      run: |
-        flutter config --no-analytics
-        flet build apk \
-        --verbose \
-        --build-number=$BUILD_NUMBER \
-        --build-version=$BUILD_VERSION \
-        --flutter-build-args=--analyze-size \
-        --flutter-build-args=--release \
-        --flutter-build-args=--split-debug-info \
-        --splash-color=$SPLASH_COLOR \
-        --splash-dark-color=$SPLASH_DARK_COLOR \
-        --company=$COMPANY_NAME
-
-    - name: Upload APK Artifact
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: apk-build-artifact
-        path: build/apk
         if-no-files-found: warn
         overwrite: false
 
@@ -248,7 +298,16 @@ jobs:
     - name: Flet Build IPA
       run: |
         flutter config --no-analytics
-        flet build ipa --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION 
+        flet build ipa \
+        --verbose \
+        --build-number=$BUILD_NUMBER \
+        --build-version=$BUILD_VERSION \
+        --company=$COMPANY_NAME \
+        --org=$ORG_NAME \
+        --product=$PROJECT \
+        --description=$DESCRIPTION \
+        --project=$PROJECT \
+        --flutter-build-args=--release
 
     - name: Upload IPA Artifact
       uses: actions/upload-artifact@v4.3.4
