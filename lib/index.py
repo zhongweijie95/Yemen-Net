@@ -1,9 +1,9 @@
 
 import flet as ft
+import atexit
 
 from .views.card import Card
-# from .models.base import Session
-from .models.base import Engine
+from .models.base import DBEngine
 from .views.user_new import UserViewNew
 from .views.list_user import UserListView
 from .viewmodels.user_vm import UserViewModel
@@ -34,28 +34,38 @@ class Application:
         user_view_new = UserViewNew(self.page)
         self.page.open(user_view_new)
 
+    def on_close_window(self, e = None):
+        self.page.client_storage.set("size", [self.page.window.width, self.page.window.height])
+        DBEngine.Session.close_all()
+
     def __call__(self, page: ft.Page) -> None:
         self.page = page
 
         self.vm = UserViewModel()
 
+        page.window.wait_until_ready_to_show = True
+
         page.title = "الاستعلام عن رصيد يمن نت"
-        page.theme_mode = page.client_storage.get("theme_mode") or page.platform_brightness.name.lower()
         page.window.icon = "assets/icon.png"
+        page.theme_mode = page.client_storage.get("theme_mode") or page.platform_brightness.name.lower()
 
         page.padding = 0
         page.expand = True
 
         if page.platform not in (ft.PagePlatform.ANDROID, ft.PagePlatform.IOS):
+            page.on_close = self.on_close_window
+
             page.window.min_width = 330
             page.window.min_height = 600
 
             page.window.max_width = 600
             page.window.max_height = 700
+            
+            if page.client_storage.contains_key("size"):
+                page.window.width = page.client_storage.get("size")[0]
+                page.window.height = page.client_storage.get("size")[1]
 
-        page.window.wait_until_ready_to_show = True
         page.horizontal_alignment = page.vertical_alignment = "center"
-        page.on_close = lambda e: Engine.session().close_all()
         page.fonts = {
             "linaround": "assets/fonts/linaround_regular.otf"
         }
@@ -113,10 +123,12 @@ class Application:
             mini=True,
             on_click=self.open_user_view_new
         )
+
         page.add(*controls)
 
         if self.vm.users and (user := self.vm.users[0]).data is not None:
             Refs.card.current.set_data(user.id, True)
 
 if __name__ == "__main__":
+    atexit.register(DBEngine.Session.close_all())
     ft.app(target=Application())
