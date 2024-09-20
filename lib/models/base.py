@@ -9,19 +9,21 @@ class Base(DeclarativeBase):
     ...
 
 
-class Engine:
+class DBEngine:
     DB_PATH: str = ""
 
     @classmethod
-    def engine(cls):
-        return create_engine(f"sqlite:///{cls.DB_PATH}")
+    def init_engine(cls):
+        cls.Engine = create_engine(f"sqlite:///{cls.DB_PATH}", echo=False)
+        return cls.Engine
 
     @classmethod
-    def session(cls):
-        return sessionmaker(cls.engine())()
+    def init_session(cls):
+        cls.Session = sessionmaker(cls.Engine)
+        return cls.Session
 
     @classmethod
     def init_db(cls):
-        Base.metadata.create_all(cls.engine())
-
-# Session.close_all()
+        cls.init_engine()
+        cls.init_session()
+        Base.metadata.create_all(cls.Engine)
