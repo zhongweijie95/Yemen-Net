@@ -4,7 +4,7 @@
 import os
 import flet as ft
 from lib.index import Application
-from lib.models.base import Engine
+from lib.models.base import DBEngine
 
 
 def base_dir(*files):
@@ -12,6 +12,6 @@ def base_dir(*files):
 
 
 if __name__ == "__main__":
-    Engine.DB_PATH = base_dir("assets", "data.db")
-    Engine.init_db()
+    DBEngine.DB_PATH = base_dir("assets", "data.db")
+    DBEngine.init_db()
     ft.app(target=Application())
