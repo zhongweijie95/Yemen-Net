@@ -1,15 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# from ..models.base import Session
-from ..models.base import Engine
+from ..models.base import DBEngine
 from ..models.user import User
 
 
 class UserViewModel:
     def __init__(self):
-        # self.session = Session()
-        self.session = Engine.session()
+        self.session = DBEngine.Session()
 
     @property
     def users(self) -> list[User]:
