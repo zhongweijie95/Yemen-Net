@@ -1,7 +1,6 @@
 name: Flet APK Build
 
 on:
-
   workflow_dispatch:
 
 env:
@@ -35,7 +34,7 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-        architecture: aarch64
+        architecture: x64
 
     - name: Setup Python Environment and Install Dependencies
       run: |
