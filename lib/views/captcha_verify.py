@@ -22,6 +22,7 @@ class CaptchaVerify(ft.BottomSheet):
 
         self.enable_drag = True
         self.show_drag_handle = True
+        self.is_scroll_controlled = True
 
         self.captcha_image = ft.Image(fit=ft.ImageFit.COVER)
         self.captcha_value = ft.TextField(

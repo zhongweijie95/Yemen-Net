@@ -28,7 +28,7 @@ class BottomAppBar(ft.BottomAppBar):
                     content=ft.ListView(
                         horizontal=True,
                         spacing=0,
-                        width=self.page.window.width - 150,
+                        width=(self.page.window.width or 300) - 150,
                         controls=[
                             ft.Radio(
                                 value=color,

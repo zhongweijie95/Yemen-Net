@@ -205,13 +205,12 @@ class Card(ft.GestureDetector):
         self.on_pan_end = self._on_pan_end
         self.on_pan_start = self._on_pan_start
         self.on_pan_update = self._on_pan_update
-        self.on_double_tap = self._on_double_tap
 
         self.content = ft.Container(
                 expand=True,
                 padding=0,
                 margin=ft.margin.only(left=12, right=12, top=35),
-                height=300,
+                height=320,
                 border_radius=14,
                 alignment=ft.alignment.center,
                 animate=ft.Animation(200, ft.AnimationCurve.LINEAR_TO_EASE_OUT),
@@ -270,10 +269,10 @@ class Card(ft.GestureDetector):
                 self.card_credit.increment(UserData.custom_credit(new_value))
 
     def _set_fetch_data(self, old_data: dict[str, str] = None):
-        if self._user.atype != 2:
-            self.expand_card()
-        else:
-            self.collapse_card()
+        # if self._user.atype != 2:
+        #     self.expand_card()
+        # else:
+        #     self.collapse_card()
 
         self.card_title.visible = True
         self.card_credit.visible = True
@@ -413,36 +412,6 @@ class Card(ft.GestureDetector):
         Refs.refresh_text.current.value = Refs.refresh_text.current.value.replace(*REFRESH_ARROWS)
         Refs.refresh_text.current.update()
 
-    def _calc_card_height(self, value: float | int) -> int | float:
-        return self.page.window.height - (self.page.window.height / 2 + self.page.window.height / value)
-
-    def expand_card(self):
-        if self.content.height >= 300:
-            return
-
-        self.content.height += 60
-        Refs.header.current.height = self._calc_card_height(6.6)
-
-        Refs.header.current.update()
-        self.content.update()
-
-    def collapse_card(self):
-        if self.content.height < 300:
-            return
-
-        self.content.height -= 60
-        Refs.header.current.height = self._calc_card_height(4.4)
-
-        Refs.header.current.update()
-        self.content.update()
-
-    def _on_double_tap(self, e: ft.MultiTapEvent) -> None:
-        if self._user.atype != 2:
-            if self.content.height >= 300:
-                self.collapse_card()
-            else:
-                self.expand_card()
-    
     @property
     def _user(self):
         return User.get_user(self._user_id)

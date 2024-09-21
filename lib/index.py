@@ -44,7 +44,7 @@ class Application:
         page.window.icon = "assets/icon.png"
         page.theme_mode = page.client_storage.get("theme_mode") or page.platform_brightness.name.lower()
 
-        page.padding = 0
+        page.padding = ft.padding.only(top=35)
         page.expand = True
 
         if page.platform not in (ft.PagePlatform.ANDROID, ft.PagePlatform.IOS):
@@ -68,45 +68,43 @@ class Application:
         ThemeController.set_theme_color(page.client_storage.get("theme_color") or "INDIGO", page)
 
         controls = [
-            ft.Stack(
+            ft.Column(
                 expand=True,
                 controls=[
-                    ft.Column(
+                    ft.Stack(
                         controls=[
-                            ft.Stack(
-                                controls=[
-                                    ft.Container(
-                                        ref=Refs.header,
-                                        padding=0,
-                                        margin=0,
-                                        height=page.window.height - (page.window.height / 2 + page.window.height / 6.6),
-                                        border_radius=ft.BorderRadius(0, 0, 42, 42),
-                                        bgcolor=page.theme.color_scheme_seed
-                                    ),
-                                    ft.Container(
-                                        content=ft.Row(
-                                            alignment=ft.MainAxisAlignment.CENTER,
-                                            controls=[
-                                                ft.Text(
-                                                    ref=Refs.refresh_text,
-                                                    value = "اسحب للأسفل للتحديث" + REFRESH_ARROWS[0],
-                                                    size=11,
-                                                    rtl=True,
-                                                    text_align="center",
-                                                    color=ft.colors.WHITE
-                                                ),
-                                                ProgressRing()
-                                            ]
-                                        ),
-                                        alignment=ft.alignment.center,
-                                        margin=ft.margin.only(top=10)
-                                    ),
-                                    Card(page)
-                                ]
+                            ft.Container(
+                                ref=Refs.header,
+                                padding=0,
+                                margin=0,
+                                # height=page.window.height - (page.window.height / 2 + page.window.height / 6.6),
+                                height=230,
+                                border_radius=ft.BorderRadius(0, 0, 42, 42),
+                                bgcolor=page.theme.color_scheme_seed
                             ),
-                            UserListView()
+                            ft.Container(
+                                expand=True,
+                                content=ft.Row(
+                                    alignment=ft.MainAxisAlignment.CENTER,
+                                    controls=[
+                                        ft.Text(
+                                            ref=Refs.refresh_text,
+                                            value = "اسحب للأسفل للتحديث" + REFRESH_ARROWS[0],
+                                            size=11,
+                                            rtl=True,
+                                            text_align="center",
+                                            color=ft.colors.WHITE
+                                        ),
+                                        ProgressRing()
+                                    ]
+                                ),
+                                alignment=ft.alignment.center,
+                                # margin=ft.margin.only(top=10)
+                            ),
+                            Card(page)
                         ]
-                    )
+                    ),
+                    UserListView()
                 ]
             )
         ]
