@@ -1,41 +1,86 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, JSON, DateTime
-from .base import Base
+from .base import DBEngine
 
 
-class User(Base):
-    __tablename__ = 'users'
+class User:
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    @staticmethod
+    def get_users():
+        return DBEngine.db().select(DBEngine.db.users.ALL)
 
-    # 0: ADSL, 1: 4G LTE, 2: Phone
-    atype: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    @staticmethod
+    def add_user(
+        atype: int,
+        username: str, 
+        password: str = None, 
+        dname: str = None,
+        data: dict[str, str] = None, 
+        cookies: dict[str, str] = None):
 
-    username: Mapped[str] = mapped_column(String(32), nullable=False)
+        user_id = DBEngine.db.users.insert(
+            atype=atype,
+            username=username,
+            password=password,
+            dname=dname,
+            data=data,
+            cookies=cookies
+        )
+        DBEngine.db.commit()
+        return user_id
 
-    # just for '0' atype
-    password: Mapped[str] = mapped_column(String(32), nullable=True)
+    @staticmethod
+    def edit_user(
+        user_id: int, 
+        atype: int, 
+        username: str, 
+        password: str, 
+        dname: str) -> None:
 
-    dname: Mapped[str] = mapped_column(String(32), nullable=True)
+        user = DBEngine.db(DBEngine.db.users.id == user_id).select().first()
 
-    data: Mapped[dict[str, str]] = mapped_column(JSON, nullable=True)
+        if user:
+            if user.atype != atype:
+                # Change account type
+                user.atype = atype
+                if atype != 0:
+                    user.password = None
+                    user.data = None
+                else:
+                    user.username = username
+                    user.password = password or "123456"
+            else:
+                # Change username or password
+                user.username = username
+                user.password = password
 
-    # just for '0' atype
-    cookies: Mapped[dict[str, str]] = mapped_column(JSON, nullable=True)
+            user.dname = dname
+            user.cookies = None
+            
+            # Commit changes
+            DBEngine.db(DBEngine.db.users.id == user_id).update(**user.as_dict())
+            DBEngine.db.commit()
 
-    created: Mapped[float] = mapped_column(DateTime, nullable=False, default=datetime.now())
+    @staticmethod
+    def edit_data_and_cookies( 
+        user_id: int,
+        data: dict[str, str], 
+        cookies: dict[str, str]):
 
-    def __repr__(self):
-        return f"<User(\
-            id={self.id}, \
-            username={self.username}, \
-            password={self.password}, \
-            dname={self.dname}, \
-            data={self.data}, \
-            cookies={self.cookies}, \
-            created={self.created}\
-            )>"
+        if (user := DBEngine.db(DBEngine.db.users.id == user_id).select().first()):
+            user.data = data
+            user.cookies = cookies
+
+            DBEngine.db(DBEngine.db.users.id == user_id).update(**user.as_dict())
+            DBEngine.db.commit()
+
+    @staticmethod
+    def get_user(user_id: int):
+        user = DBEngine.db(DBEngine.db.users.id == user_id).select().first()
+        return user
+
+    @staticmethod
+    def delete_user(user_id: int):
+        DBEngine.db(DBEngine.db.users.id == user_id).delete()
+        DBEngine.db.commit()

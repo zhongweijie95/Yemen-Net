@@ -56,6 +56,7 @@ class About(ft.BottomSheet):
         self.show_drag_handle = True
 
         self.content = ft.Column(
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             horizontal_alignment="center",
             controls=[
                 ft.Text(
@@ -92,6 +93,18 @@ class About(ft.BottomSheet):
                                 ]
                             )
                         ]
+                    )
+                ),
+
+                ft.Container(
+                    alignment=ft.alignment.center,
+                    margin=ft.margin.only(right=10, bottom=10),
+                    content=ft.Text(
+                        value="v3.0.0",
+                        weight=ft.FontWeight.BOLD,
+                        font_family="Monospace",
+                        size=13,
+                        text_align="center"
                     )
                 )
             ]

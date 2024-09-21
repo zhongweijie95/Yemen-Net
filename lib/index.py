@@ -1,12 +1,10 @@
 
 import flet as ft
-import atexit
 
 from .views.card import Card
-from .models.base import DBEngine
+from .models.user import User
 from .views.user_new import UserViewNew
 from .views.list_user import UserListView
-from .viewmodels.user_vm import UserViewModel
 from .views.bottom_bar import BottomAppBar
 from .constant import Refs, REFRESH_ARROWS, ThemeController
 
@@ -36,12 +34,9 @@ class Application:
 
     def on_close_window(self, e = None):
         self.page.client_storage.set("size", [self.page.window.width, self.page.window.height])
-        DBEngine.Session.close_all()
 
     def __call__(self, page: ft.Page) -> None:
         self.page = page
-
-        self.vm = UserViewModel()
 
         page.window.wait_until_ready_to_show = True
 
@@ -126,9 +121,8 @@ class Application:
 
         page.add(*controls)
 
-        if self.vm.users and (user := self.vm.users[0]).data is not None:
+        if User.get_users() and (user := User.get_users()[0]).data is not None:
             Refs.card.current.set_data(user.id, True)
 
 if __name__ == "__main__":
-    atexit.register(DBEngine.Session.close_all())
     ft.app(target=Application())

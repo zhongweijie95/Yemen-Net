@@ -14,4 +14,5 @@ def base_dir(*files):
 if __name__ == "__main__":
     DBEngine.DB_PATH = base_dir("assets", "data.db")
     DBEngine.init_db()
+    DBEngine.init_tables()
     ft.app(target=Application())

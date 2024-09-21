@@ -3,7 +3,6 @@
 
 import flet as ft
 from ..constant import Refs, ACCOUNT_TYPES
-from ..viewmodels.user_vm import UserViewModel
 
 
 class TextField(ft.TextField):
@@ -51,8 +50,6 @@ class UserViewBase(ft.BottomSheet):
         self.enable_drag = True
         self.show_drag_handle = True
         self.is_scroll_controlled = True
-
-        self.vm = UserViewModel()
 
         self.logo = ft.Ref[ft.Container]()
         self.title = ft.Ref[ft.Text]()

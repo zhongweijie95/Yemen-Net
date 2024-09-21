@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import flet as ft
+from ..models.user import User
 from ..constant import ACCOUNT_TYPES
 from .user_base import UserViewBase
 
@@ -12,7 +13,7 @@ class UserViewEdit(UserViewBase):
 
         self.user_id = user_id
 
-        user = self.vm.get_user(user_id)
+        user = User.get_user(user_id)
 
         self.dname.value = user.dname
         self.username.value = user.username
@@ -29,7 +30,7 @@ class UserViewEdit(UserViewBase):
     def on_submit(self, e: ft.ControlEvent = None):
         super().on_submit(e)
 
-        self.vm.edit_user(
+        User.edit_user(
             self.user_id,
             int(self.drop_down.current.value),
             self.username.value, 

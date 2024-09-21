@@ -5,9 +5,9 @@ import requests
 import flet as ft
 
 from .captcha_verify import CaptchaVerify
-from ..viewmodels.user_vm import UserViewModel
 from ..scrapper import YADSL, LTE, Phone, ParserError
 from ..constant import Refs, REFRESH_ARROWS, UserData
+from ..models.user import User
 
 
 class CardItem(ft.Container):
@@ -142,18 +142,19 @@ class CardCredit(ft.Container):
                 ft.Text(
                     value="الرصيد المتاح",
                     color=ft.colors.WHITE,
-                    size=12,
+                    size=14,
                     rtl=True
                 ),
                 ft.Text(
                     color = ft.colors.WHITE,
-                    font_family="circle_rounded",
-                    size = 16,
+                    # font_family="circle_rounded",
+                    font_family="Monospace",
+                    size = 18,
                     weight=ft.FontWeight.W_700,
                     spans=[
                         ft.TextSpan(
                             style = ft.TextStyle(
-                                size = 12,
+                                size = 14,
                                 color = ft.colors.GREEN
                             ),
                             visible=False
@@ -189,12 +190,9 @@ class CardCredit(ft.Container):
 
 class Card(ft.GestureDetector):
     _user_id: int = None
-    _user = None
 
     def __init__(self, page: ft.Page, **kwargs):
         super().__init__(ref=Refs.card, **kwargs)
-
-        self.vm = UserViewModel()
 
         self.page = page
 
@@ -310,7 +308,6 @@ class Card(ft.GestureDetector):
             self._calc_old_data(old_data)
 
             self.card_title.set_active(pdata.pop("account_status"))
-
             self.card_title.set_subtitle(self._user.username)
 
             for index, (label, value) in enumerate(pdata.items()):
@@ -331,7 +328,7 @@ class Card(ft.GestureDetector):
         old_data = self._user.data.copy() if self._user.data is not None else {}
         new_data = isp.fetch_data(self._user.cookies)
 
-        self.vm.edit_data_and_cookies(self._user_id, new_data, isp.get_cookies())
+        User.edit_data_and_cookies(self._user_id, new_data, isp.get_cookies())
         self._set_fetch_data(old_data)
 
         Refs.loader.current.hide()
@@ -342,11 +339,12 @@ class Card(ft.GestureDetector):
         def on_submit(data: dict[str, str], old_data: dict[str, str] = None):
             if self._user.atype != 0:
                 # cookies = None if self._user.atype != 0 else isp.get_cookies()
-                self.vm.edit_data_and_cookies(self._user_id, data, None)
+                User.edit_data_and_cookies(self._user_id, data, None)
                 self._set_fetch_data(old_data)
             else:
-                self.vm.edit_data_and_cookies(self._user_id, None, isp.get_cookies())
-                self._fetch_data()
+                User.edit_data_and_cookies(self._user_id, data, isp.get_cookies())
+                self._set_fetch_data(old_data)
+                # self._fetch_data()
 
         try:
             if self._user.atype != 0:
@@ -388,7 +386,6 @@ class Card(ft.GestureDetector):
     def set_data(self, user_id: int, display: bool = False) -> None:
         if self._user_id != user_id:
             self._user_id = user_id
-            self._user = self.vm.get_user(user_id)
 
         if self._user.data is not None:
             self._set_fetch_data()
@@ -409,8 +406,8 @@ class Card(ft.GestureDetector):
 
         if self._user_id is not None:
             self._login()
-        elif len(self.vm.users) > 0:
-            self.set_data(self.vm.users[0].id)
+        elif len(User.get_users()) > 0:
+            self.set_data(User.get_users()[0].id)
 
     def _on_pan_start(self, e: ft.DragStartEvent) -> None:
         Refs.refresh_text.current.value = Refs.refresh_text.current.value.replace(*REFRESH_ARROWS)
@@ -445,3 +442,7 @@ class Card(ft.GestureDetector):
                 self.collapse_card()
             else:
                 self.expand_card()
+    
+    @property
+    def _user(self):
+        return User.get_user(self._user_id)

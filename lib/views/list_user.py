@@ -4,8 +4,8 @@
 import flet as ft
 from typing import Callable
 from ..constant import Refs
+from ..models.user import User
 from .user_edit import UserViewEdit
-from ..viewmodels.user_vm import UserViewModel
 
 
 class ListTile(ft.ListTile):
@@ -15,8 +15,6 @@ class ListTile(ft.ListTile):
                  subtitle: str,
                  **kwargs):
         super().__init__(**kwargs)
-
-        self.vm = UserViewModel()
 
         self.on_click = self._on_click
         self.on_long_press = self.toggle_action_buttons
@@ -59,7 +57,7 @@ class ListTile(ft.ListTile):
         self._set_list_state(lambda x: x == self)
 
     def on_delete(self, e: ft.ControlEvent) -> None:
-        self.vm.delete_user(self.data)
+        User.delete_user(self.data)
         Refs.user_list.current.update_list()
 
         if Refs.user_list.current.controls:
@@ -74,14 +72,14 @@ class UserListView(ft.ListView):
     def __init__(self):
         super().__init__(ref=Refs.user_list)
 
-        self.vm = UserViewModel()
+        # self.vm = UserViewModel()
 
         self.spacing = 6
         self.expand = True
         self.padding = ft.padding.only(6, 6, 0, 6)
         self.controls = [
             self.new_item(i, user)
-            for i, user in enumerate(self.vm.get_users(), 1)
+            for i, user in enumerate(User.get_users(), 1)
         ]
 
     def new_item(self, index: int, user) -> ListTile:
@@ -94,7 +92,7 @@ class UserListView(ft.ListView):
 
     def update_list(self):
         self.controls.clear()
-        for i, user in enumerate(self.vm.get_users(), 1):
+        for i, user in enumerate(User.get_users(), 1):
             self.controls.append(self.new_item(i, user))
         self.controls.sort(key=lambda c: c.title.value)
         self.update()

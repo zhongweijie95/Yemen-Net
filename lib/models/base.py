@@ -1,29 +1,27 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from sqlalchemy import create_engine
-
-
-class Base(DeclarativeBase):
-    ...
+from pydal import DAL, Field
+from datetime import datetime
 
 
 class DBEngine:
     DB_PATH: str = ""
-
-    @classmethod
-    def init_engine(cls):
-        cls.Engine = create_engine(f"sqlite:///{cls.DB_PATH}", echo=False)
-        return cls.Engine
-
-    @classmethod
-    def init_session(cls):
-        cls.Session = sessionmaker(cls.Engine)
-        return cls.Session
+    db: DAL = None
 
     @classmethod
     def init_db(cls):
-        cls.init_engine()
-        cls.init_session()
-        Base.metadata.create_all(cls.Engine)
+        cls.db = DAL(f'sqlite://{cls.DB_PATH}')
+
+    @classmethod
+    def init_tables(cls):
+        DBEngine.db.define_table(
+            'users',
+            Field('atype', 'integer', default=0),  # 0: ADSL, 1: 4G LTE, 2: Phone
+            Field('username', 'string', length=32, required=True),
+            Field('password', 'string', length=32),  # Just for '0' atype
+            Field('dname', 'string', length=32),
+            Field('data', 'json'),  # Dictionary-like structure
+            Field('cookies', 'json'),  # Just for '0' atype
+            Field('created', 'datetime', default=datetime.now()),  # Current datetime
+        )

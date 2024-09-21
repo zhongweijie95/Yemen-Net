@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import flet as ft
+from ..models.user import User
 from .user_base import UserViewBase
 
 
@@ -13,7 +14,7 @@ class UserViewNew(UserViewBase):
         super().on_submit(e)
 
         atype = int(self.drop_down.current.value)
-        self.vm.add_user(
+        User.add_user(
             atype,
             self.username.value, 
             self.password.value or (None if atype != 0 else "123456"),

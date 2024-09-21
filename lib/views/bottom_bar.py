@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-
 import flet as ft
 from .about import About
 from ..constant import THEME_COLORS, ThemeController

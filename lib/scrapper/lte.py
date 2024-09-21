@@ -36,9 +36,6 @@ class LTE(Base):
         super().fetch_data(resp)
 
         try:
-            with open("test_lte.html", "wb") as fw:
-                fw.write(resp.content)
-
             resp_soup = self.bs4(resp)
             table = list(resp_soup.find("table", class_="transdetail").find_all("tr"))
 
