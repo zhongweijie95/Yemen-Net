@@ -7,7 +7,7 @@ env:
   # https://flet.dev/docs/publish#versioning
   BUILD_NUMBER: 1726870141
   BUILD_VERSION: 3.0.0
-  PYTHON_VERSION: 3.11 #3.12.5
+  PYTHON_VERSION: 3.12 #3.12.5
   FLUTTER_VERSION: 3.24 # 3.22.5, 3.24.5
   ANDROID_PLATFORM_TARGET: arm64 # arm, arm64, x64, x86
 
@@ -40,7 +40,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --only-binary :all: greenlet
-        pip install --only-binary :all: Flask-SQLAlchemy
+        pip install --only-binary :all: SQLAlchemy
         pip install -r requirements.txt
 
     - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
