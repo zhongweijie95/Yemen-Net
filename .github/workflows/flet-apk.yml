@@ -36,6 +36,12 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
         architecture: x64
 
+    - name: Set up Android NDK
+      run: |
+        wget https://dl.google.com/android/repository/android-ndk-r21d-linux-x86_64.zip
+        unzip android-ndk-r21d-linux-x86_64.zip -d $HOME/ndk
+        echo "export ANDROID_NDK_HOME=$HOME/ndk/android-ndk-r21d" >> $GITHUB_ENV
+
     - name: Setup Python Environment and Install Dependencies
       run: |
         python -m pip install --upgrade pip
