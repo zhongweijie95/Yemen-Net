@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import flet as ft
+import re
 from humanize import naturalsize
 
 
@@ -36,11 +37,17 @@ class UserData:
 
     @classmethod
     def type_0(cls, data: dict[str, str]) -> dict[str, str]:
-        for k, v in data.items():
-            if isinstance(v, str) and "جيجابايت" in v:
-                u, _ = v.strip().split()
-                v = UserData.custom_credit(u.strip())
-                data[k] = v
+        pdata = data.copy()
+        for k, v in pdata.items():
+            if isinstance(v, str):
+                if "جيجابايت" in v:
+                    u, _ = v.strip().split()
+                    v = UserData.custom_credit(u.strip())
+                    data[k] = v
+                if "تنبيه" in v:
+                    date, warn = v.split("\r")
+                    data[k] = date
+                    data["تنبية"] = re.sub(r"\*\*(.+)\*\*", "", warn)
         return data
 
     @classmethod
@@ -87,7 +94,7 @@ class ThemeController:
             controls = page.controls[0].content.controls[0].controls
             controls[0].bgcolor = color
 
-            for c in controls[1].controls:
+            for c in controls[1].controls[:-1]:
                 c.content.bgcolor = color + "800"
 
         page.client_storage.set("theme_color", color)

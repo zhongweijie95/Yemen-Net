@@ -41,23 +41,19 @@ class User:
         user = DBEngine.db(DBEngine.db.users.id == user_id).select().first()
 
         if user:
-            if user.atype != atype:
-                # Change account type
-                user.atype = atype
-                if atype != 0:
-                    user.password = None
-                    user.data = None
-                else:
-                    user.username = username
-                    user.password = password or "123456"
-            else:
-                # Change username or password
-                user.username = username
-                user.password = password
-
             user.dname = dname
-            user.cookies = None
-            
+
+            if (user.atype != atype or
+                user.username != username or
+                user.password != password):
+
+                user.atype = atype
+                user.username = username
+                user.password = None if atype != 0 else (password or "123456")
+
+                user.data = None
+                user.cookies = None
+
             # Commit changes
             DBEngine.db(DBEngine.db.users.id == user_id).update(**user.as_dict())
             DBEngine.db.commit()

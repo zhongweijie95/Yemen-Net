@@ -46,12 +46,17 @@ class ADSLCard(Card):
         self.card_title.set_loading(False)
 
     def start_captcha_verify(self) -> None:
-        self._isp.login(self._user.username, self._user.password)
+        self._isp.login(
+            self._user.username, 
+            self._user.password
+        )
         cv = CaptchaVerify(self.page, self._isp, self.on_captcha_verify_submit, 4)
         cv.open_dialog()
 
     def login_web(self) -> None:
         self.card_title.set_loading(True)
+
+        self._isp = ADSL()
 
         try:
             self.fetch_web_data()
@@ -94,6 +99,7 @@ class LTECard(Card):
 
     def login_web(self) -> None:
         self.card_title.set_loading(True)
+        self._isp = LTE()
 
         try:
             old_data = self._user.data
@@ -139,6 +145,7 @@ class PhoneCard(Card):
 
     def login_web(self) -> None:
         self.card_title.set_loading(True)
+        self._isp = Phone()
 
         try:
             self._isp.login(self._user.username)

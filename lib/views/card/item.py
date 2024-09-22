@@ -29,7 +29,8 @@ class CardItem(ft.Container):
                             weight=ft.FontWeight.W_500,
                             overflow=ft.TextOverflow.CLIP,
                             font_family="circle_rounded",
-                            selectable=True
+                            selectable=True,
+                            rtl=True
                         ),
                         ft.Text(
                             value=label,

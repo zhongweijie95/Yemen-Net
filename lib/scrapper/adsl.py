@@ -73,7 +73,6 @@ class ADSL:
                  cookies: dict = None):
 
         self._lang = lang
-        self._cookies = cookies
         self._payload = Payload()
 
         self.init_session(cookies)
@@ -150,8 +149,8 @@ class ADSL:
         return data
 
     def fetch_data(self, cookies: dict = None) -> dict:
-        self.clear_cookies()
         if cookies is not None:
+            self.clear_cookies()
             self.set_cookies(cookies)
         return self.parse_data(self._session.get(self._user_url))
 

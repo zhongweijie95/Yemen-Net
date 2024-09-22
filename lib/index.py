@@ -19,7 +19,7 @@ class Cards(ft.Stack):
             LTECard(page, visible=False),
             PhoneCard(page, visible=False),
             ft.Lottie(
-                src="/lottie/online-health-report.json"
+                src="assets/lottie/online-health-report.json"
             )
         ]
 
@@ -45,7 +45,7 @@ class Application:
         page.window.wait_until_ready_to_show = True
 
         page.title = "الاستعلام عن رصيد يمن نت"
-        page.window.icon = "icon.png"
+        page.window.icon = "assets/icon.png"
         page.theme_mode = page.client_storage.get("theme_mode") or page.platform_brightness.name.lower()
 
         page.padding = 0
@@ -99,7 +99,7 @@ class Application:
                                     border_radius=ft.BorderRadius(0, 0, 42, 42),
                                     bgcolor=page.theme.color_scheme_seed
                                 ),
-                                Cards(page, ref=Refs.cards),
+                                Cards(page, ref=Refs.cards)
                             ]
                         ),
                         UserListView(ref=Refs.users)
