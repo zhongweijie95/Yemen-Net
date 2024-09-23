@@ -130,7 +130,8 @@ class Dialogs:
                 icon=ft.Icon(ft.icons.ERROR, ft.colors.RED),
                 content=ft.Text(
                     value = str(err),
-                    text_align="center"
+                    text_align="center",
+                    rtl=True
                 )
             )
         )

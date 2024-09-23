@@ -4,6 +4,7 @@
 import flet as ft
 from ..models.user import User
 from .user_base import UserViewBase
+from ..constant import Dialogs
 
 
 class UserViewNew(UserViewBase):
@@ -14,6 +15,13 @@ class UserViewNew(UserViewBase):
         super().on_submit(e)
 
         atype = int(self.drop_down.current.value)
+
+        # check for exists user
+        for user in User.get_users():
+            if user.atype == atype and user.username == self.username.value:
+                Dialogs.error("هاذا المستخدم موجود مسبقا!", self.page)
+                return
+
         User.add_user(
             atype,
             self.username.value, 

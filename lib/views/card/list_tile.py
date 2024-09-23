@@ -38,15 +38,11 @@ class CardTitle(ft.ListTile):
 
         self.leading = ft.Container(
             content=ft.Lottie(
-                # src="/lottie/down-arrow.json"
                 src_base64=LottieFiles.down_arrow
             )
         )
 
     def set_loading(self, on: bool) -> None:
-        # file = "loading-carga" if on else "down-arrow"
-        # self.leading.content.src = f"/lottie/{file}.json"
-
         self.leading.content.src_base64 = LottieFiles.loading_carga if on else LottieFiles.down_arrow
         self.leading.update()
 

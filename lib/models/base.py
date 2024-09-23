@@ -17,7 +17,7 @@ class DBEngine:
     @classmethod
     def init_tables(cls):
         try:
-            DBEngine.db.define_table(
+            cls.db.define_table(
                 'users',
                 Field('atype', 'integer', default=0),  # 0: ADSL, 1: 4G LTE, 2: Phone
                 Field('username', 'string', length=32, required=True),
@@ -27,5 +27,6 @@ class DBEngine:
                 Field('cookies', 'json'),  # Just for '0' atype
                 Field('created', 'datetime', default=datetime.now()),  # Current datetime
             )
+            cls.db.commit()
         except sqlite3.OperationalError:
             pass

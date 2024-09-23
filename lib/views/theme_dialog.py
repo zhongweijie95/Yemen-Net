@@ -7,12 +7,13 @@ from ..constant import THEME_COLORS, ThemeController
 
 
 class ThemeButtonGroup(ft.Row):
-    def __init__(self, 
+    def __init__(self,
+                 value: str,
                  colors: Sequence[str],
                  on_change: Callable):
         super().__init__()
 
-        self.scroll = ft.ScrollMode.ADAPTIVE
+        self.scroll = ft.ScrollMode.HIDDEN
         self.alignment = ft.MainAxisAlignment.CENTER
 
         self.on_change = on_change
@@ -22,18 +23,20 @@ class ThemeButtonGroup(ft.Row):
                 height=32,
                 data=color,
                 bgcolor=color,
-                on_click = self._on_click,
-                shape=ft.BoxShape.CIRCLE
+                on_click=self._on_click,
+                shape=ft.BoxShape.CIRCLE,
+                border=None if color != value else ft.border.all(3, value + "100")
             )
             for color in colors
         ]
 
-    def _on_click(self, e: ft.ControlEvent) -> None:
-        e.control.border = ft.border.all(3, e.control.bgcolor + "100")
+    def select_color(self, color: str) -> None:
         for c in self.controls:
-            if e.control != c:
-                c.border = None
+            c.border = None if c.data != color else ft.border.all(3, c.bgcolor + "100")
         self.update()
+
+    def _on_click(self, e: ft.ControlEvent) -> None:
+        self.select_color(e.control.data)
         self.on_change(e.control.data)
 
 
@@ -85,7 +88,8 @@ class ThemeDialog(ft.BottomSheet):
                     ft.Container(
                         margin=ft.margin.only(left=25, right=25),
                         content=ThemeButtonGroup(
-                            THEME_COLORS,
+                            value=page.client_storage.get("theme_color") or THEME_COLORS[0],
+                            colors=THEME_COLORS,
                             on_change=lambda color: ThemeController.set_theme_color(color, self.page)
                         )
                     )

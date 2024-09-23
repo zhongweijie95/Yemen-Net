@@ -73,8 +73,7 @@ class User:
 
     @staticmethod
     def get_user(user_id: int):
-        user = DBEngine.db(DBEngine.db.users.id == user_id).select().first()
-        return user
+        return DBEngine.db(DBEngine.db.users.id == user_id).select().first()
 
     @staticmethod
     def delete_user(user_id: int):
