@@ -18,33 +18,8 @@ env:
   DESCRIPTION: الاستعلام من رصيد يمن نت, بالأضافة الى بعض الخدمات و الاضافات الاخرى
 
 jobs:
-  start-kind:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: 1
-      - name: get arkade
-        uses: alexellis/setup-arkade@v1
-      - name: get kubectl and kubectl
-        uses: alexellis/arkade-get@master
-        with:
-          kubectl: latest
-          kind: latest
-      - name: Create a KinD cluster
-        run: |
-          mkdir -p $HOME/.kube/
-          kind create cluster --wait 300s
-      - name: Wait until CoreDNS is ready
-        run: |
-          kubectl rollout status deploy/coredns -n kube-system --timeout=300s
-      - name: Explore nodes
-        run: kubectl get nodes -o wide
-      - name: Explore pods
-        run: kubectl get pod -A -o wide
-
   build-apk:
-    runs-on: actuated-aarch64 #ubuntu-latest
+    runs-on: ARM64 #actuated-aarch64 #ubuntu-latest
 
     steps:
     - name: Checkout code
