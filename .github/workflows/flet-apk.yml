@@ -68,10 +68,8 @@ jobs:
         --description="$DESCRIPTION" \
         --project="$PROJECT" \
         --flutter-build-args=--release \
-        --flutter-build-args=--analyze-size \
-        --flutter-build-args=--target-platform \
-        --flutter-build-args=android-$ANDROID_PLATFORM_TARGET \
-        --flutter-build-args=--split-per-abi
+        --flutter-build-args=--split-per-abi \
+        --flutter-build-args=--analyze-size
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4.3.4
