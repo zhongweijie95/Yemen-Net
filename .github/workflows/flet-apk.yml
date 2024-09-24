@@ -64,7 +64,7 @@ jobs:
         --project="$PROJECT" \
         --flutter-build-args=--release \
         --flutter-build-args=--target-platform \
-        --flutter-build-args=android-arm,android-arm64,android-x64 \
+        --flutter-build-args=android-arm,android-x64,android-arm64 \
         --flutter-build-args=--split-per-abi
 
     - name: Upload APK Artifact
