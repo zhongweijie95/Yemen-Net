@@ -57,7 +57,7 @@ jobs:
     - name: Flet Build APK
       run: |
         flutter config --no-analytics
-        flet build apk \
+        flet build appbundle \
         --include-packages flet_lottie \
         --verbose \
         --build-number=$BUILD_NUMBER \
@@ -68,12 +68,14 @@ jobs:
         --description="$DESCRIPTION" \
         --project="$PROJECT" \
         --flutter-build-args=--release \
-        --flutter-build-args=--split-per-abi
+        --flutter-build-args=--analyze-size \
+        --flutter-build-args=--target-platform \
+        --flutter-build-args=android-$ANDROID_PLATFORM_TARGET
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4.3.4
       with:
         name: apk-build-artifact
-        path: build/apk
+        path: build/app
         if-no-files-found: warn
         overwrite: false
