@@ -48,6 +48,7 @@ class UserViewBase(ft.BottomSheet):
         self.page = page
 
         self.enable_drag = True
+        self.use_safe_area = True
         self.show_drag_handle = True
         self.is_scroll_controlled = True
 
@@ -58,14 +59,16 @@ class UserViewBase(ft.BottomSheet):
         self.dname = TextField("الاسم المستعار", "")
         self.username = TextField(
             "أسم المستخدم",
-            required=True
+            required=True,
+            on_submit=self.on_submit
         )
 
         self.password = TextField(
             value = "123456",
             label="كلمة السر",
             password=True,
-            can_reveal_password=True
+            can_reveal_password=True,
+            on_submit=self.on_submit
         )
 
         self.content = ft.SafeArea(

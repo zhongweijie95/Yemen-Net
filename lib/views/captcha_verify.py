@@ -22,6 +22,7 @@ class CaptchaVerify(ft.BottomSheet):
         self.callback = callback
 
         self.enable_drag = True
+        self.use_safe_area = True
         self.show_drag_handle = True
         self.is_scroll_controlled = True
 
@@ -34,7 +35,8 @@ class CaptchaVerify(ft.BottomSheet):
             suffix=ft.IconButton(
                 icon=ft.icons.REFRESH,
                 on_click=self.on_refresh
-            )
+            ),
+            on_submit=self.on_submit
         )
 
         self.content=ft.SafeArea(

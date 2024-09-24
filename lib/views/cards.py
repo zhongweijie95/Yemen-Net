@@ -36,7 +36,10 @@ class ADSLCard(Card):
     def fetch_web_data(self) -> None:
         self.card_title.set_loading(True)
 
-        old_data = self._user.data.copy() if self._user.data is not None else {}
+        old_data = None
+        if self._user.data is not None:
+            old_data = self._user.data.copy()
+
         new_data = self._isp.fetch_data(self._user.cookies)
 
         User.edit_data_and_cookies(self._user_id, new_data, self._isp.get_cookies())
@@ -54,7 +57,6 @@ class ADSLCard(Card):
 
     def login_web(self) -> None:
         self.card_title.set_loading(True)
-
         self._isp = ADSL()
 
         try:
