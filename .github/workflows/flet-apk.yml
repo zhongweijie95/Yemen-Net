@@ -52,6 +52,7 @@ jobs:
     - name: Flet Build APK
       run: |
         flutter config --no-analytics
+        flutter clean
         flet build apk \
         --include-packages flet_lottie \
         --verbose \
@@ -65,7 +66,8 @@ jobs:
         --flutter-build-args=--release \
         --flutter-build-args=--analyze-size \
         --flutter-build-args=--target-platform \
-        --flutter-build-args=android-$ANDROID_PLATFORM_TARGET
+        --flutter-build-args=android-arm,android-arm64,android-x64 \
+        --flutter-build-args=--split-per-abi
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4.3.4
