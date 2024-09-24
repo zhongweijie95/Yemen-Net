@@ -19,9 +19,9 @@ class ThemeButtonGroup(ft.Row):
         self.on_change = on_change
         self.controls = [
             ft.Container(
+                key=color,
                 width=32,
                 height=32,
-                data=color,
                 bgcolor=color,
                 on_click=self._on_click,
                 shape=ft.BoxShape.CIRCLE,
@@ -32,12 +32,12 @@ class ThemeButtonGroup(ft.Row):
 
     def select_color(self, color: str) -> None:
         for c in self.controls:
-            c.border = None if c.data != color else ft.border.all(3, c.bgcolor + "100")
+            c.border = None if c.key != color else ft.border.all(3, c.bgcolor + "100")
         self.update()
 
     def _on_click(self, e: ft.ControlEvent) -> None:
-        self.select_color(e.control.data)
-        self.on_change(e.control.data)
+        self.select_color(e.control.key)
+        self.on_change(e.control.key)
 
 
 class ThemeDialog(ft.BottomSheet):
@@ -52,47 +52,45 @@ class ThemeDialog(ft.BottomSheet):
         self.enable_drag = True
         self.show_drag_handle = True
 
-        self.content = ft.Container(
-            content=ft.Column(
-                alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                controls=[
-                    ft.RadioGroup(
-                        value=mode,
-                        content=ft.Row(
-                            alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                            vertical_alignment=ft.CrossAxisAlignment.END,
-                            controls=[
-                                ft.Column(
-                                    alignment=ft.MainAxisAlignment.CENTER,
-                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                    controls=[
-                                        ft.Icon(
-                                            name=icon,
-                                            size=64
-                                        ),
-                                        ft.Radio(
-                                            value=name,
-                                            tooltip=tooltip
-                                        )
-                                    ]
-                                )
-                                for icon, name, tooltip in zip(
-                                    [ft.icons.BRIGHTNESS_MEDIUM, ft.icons.DARK_MODE, ft.icons.LIGHT_MODE], 
-                                    ["system", "dark", "light"], 
-                                    ["اتبع نمط النظام", "الوضع الليلي", "الوضع النهاري"]
-                                )
-                            ]
-                        ),
-                        on_change=lambda e: ThemeController.toggle_theme_mode(e.data, self.page)
+        self.content = ft.Column(
+            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+            controls=[
+                ft.RadioGroup(
+                    value=mode,
+                    content=ft.Row(
+                        alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                        vertical_alignment=ft.CrossAxisAlignment.END,
+                        controls=[
+                            ft.Column(
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                controls=[
+                                    ft.Icon(
+                                        name=icon,
+                                        size=64
+                                    ),
+                                    ft.Radio(
+                                        value=name,
+                                        tooltip=tooltip
+                                    )
+                                ]
+                            )
+                            for icon, name, tooltip in zip(
+                                [ft.icons.BRIGHTNESS_MEDIUM, ft.icons.DARK_MODE, ft.icons.LIGHT_MODE], 
+                                ["system", "dark", "light"], 
+                                ["اتبع نمط النظام", "الوضع الليلي", "الوضع النهاري"]
+                            )
+                        ]
                     ),
-                    ft.Container(
-                        margin=ft.margin.only(left=25, right=25),
-                        content=ThemeButtonGroup(
-                            value=page.client_storage.get("theme_color") or THEME_COLORS[0],
-                            colors=THEME_COLORS,
-                            on_change=lambda color: ThemeController.set_theme_color(color, self.page)
-                        )
+                    on_change=lambda e: ThemeController.toggle_theme_mode(e.data, self.page)
+                ),
+                ft.Container(
+                    margin=ft.margin.only(left=25, right=25),
+                    content=ThemeButtonGroup(
+                        value=page.client_storage.get("theme_color") or THEME_COLORS[0],
+                        colors=THEME_COLORS,
+                        on_change=lambda color: ThemeController.set_theme_color(color, self.page)
                     )
-                ]
-            )
+                )
+            ]
         )
