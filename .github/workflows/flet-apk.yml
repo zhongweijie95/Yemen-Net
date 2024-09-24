@@ -52,7 +52,6 @@ jobs:
     - name: Flet Build APK
       run: |
         flutter config --no-analytics
-        flutter clean
         flet build apk \
         --include-packages flet_lottie \
         --verbose \
