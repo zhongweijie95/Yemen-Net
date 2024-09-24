@@ -57,7 +57,7 @@ jobs:
     - name: Flet Build APK
       run: |
         flutter config --no-analytics
-        flet build appbundle \
+        flet build aab \
         --include-packages flet_lottie \
         --verbose \
         --build-number=$BUILD_NUMBER \
