@@ -27,7 +27,7 @@ jobs:
 
     - name: Patch for APK build
       run: |
-        sudo apt-get update -y && sudo apt-get upgrade -y
+        sudo apt-get update -y
         sudo apt-get install -y \
           curl \
           git \
