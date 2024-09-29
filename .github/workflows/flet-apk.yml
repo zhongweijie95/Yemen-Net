@@ -86,7 +86,7 @@ jobs:
         --flutter-build-args=--release \
         --flutter-build-args=--analyze-size \
         --flutter-build-args=--target-platform=android-arm \
-        --flutter-build-args="-P android.ndk.abiFilters=armeabi-v7a"
+        --flutter-build-args="-P android.ndk.abiFilters=armeabi-v7a" \
         --flutter-build-args="-P android.buildTypes.release.ndk.abiFilters=armeabi-v7a"
 
     - name: Upload APK Artifact
