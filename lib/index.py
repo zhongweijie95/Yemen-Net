@@ -18,8 +18,12 @@ class Cards(ft.Stack):
             ADSLCard(page),
             LTECard(page, visible=False),
             PhoneCard(page, visible=False),
-            ft.Lottie(
-                src_base64=LottieFiles.online_health_report
+            ft.Container(
+                ft.Lottie(
+                    fit=ft.ImageFit.COVER,
+                    src_base64=LottieFiles.online_health_report
+                ),
+                on_click=lambda e: Application.open_user_view_new(self, e)
             )
         ]
 
@@ -74,8 +78,8 @@ class Application:
         page.bottom_appbar = BottomAppBar(page)
         page.floating_action_button_location = ft.FloatingActionButtonLocation.CENTER_DOCKED
         page.floating_action_button = ft.FloatingActionButton(
-            icon=ft.icons.ADD,
             mini=True,
+            icon=ft.icons.ADD,
             on_click=self.open_user_view_new
         )
 
@@ -102,13 +106,16 @@ class Application:
                                 Cards(page, ref=Refs.cards)
                             ]
                         ),
-                        UserListView(ref=Refs.users)
+                        UserListView(page, ref=Refs.users)
                     ]
                 )
             )
         )
 
         if (users := User.get_users()) and (user := users[0]).data is not None:
+            Refs.users.current.controls[0].selected = True
+            Refs.users.current.update()
+
             card = Refs.cards.current.toggle_card(user.atype)
             card.set_data(user.id, True)
         else:

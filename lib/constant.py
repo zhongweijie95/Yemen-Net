@@ -99,10 +99,8 @@ class ThemeController:
             color_scheme_seed=color,
             use_material3=True,
             font_family="linaround",
-            # primary_color=color + "900",
             primary_color=color_900,
             divider_theme=ft.DividerTheme(
-                # color = color + "900"
                 color = color_900
             )
         )
@@ -112,8 +110,10 @@ class ThemeController:
             controls[0].bgcolor = color
 
             for c in controls[1].controls[:-1]:
-                # c.content.bgcolor = color + "800"
                 c.content.bgcolor = ThemeController.get_color(color, 800)
+
+        for c in Refs.users.current.controls if Refs.users.current else []:
+            c.selected_tile_color = ft.colors.with_opacity(0.09, color)
 
         page.client_storage.set("theme_color", color)
         page.update()
