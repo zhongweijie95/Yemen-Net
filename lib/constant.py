@@ -80,6 +80,12 @@ class UserData:
 class ThemeController:
 
     @staticmethod
+    def get_color(color: str, opacity: int | float) -> str:
+        # if color.startswith("#"):
+        #     return ft.colors.with_opacity(0.1, color)
+        return color + str(opacity)
+
+    @staticmethod
     def toggle_theme_mode(theme_mode: str, page: ft.Page) -> None:
         page.client_storage.set("theme_mode", theme_mode)
         page.theme_mode = theme_mode
@@ -87,13 +93,17 @@ class ThemeController:
 
     @staticmethod
     def set_theme_color(color: str, page: ft.Page) -> None:
+        color_900 = ThemeController.get_color(color, 900)
+
         page.theme = page.dark_theme = ft.Theme(
             color_scheme_seed=color,
             use_material3=True,
             font_family="linaround",
-            primary_color=color + "900",
+            # primary_color=color + "900",
+            primary_color=color_900,
             divider_theme=ft.DividerTheme(
-                color = color + "900"
+                # color = color + "900"
+                color = color_900
             )
         )
 
@@ -102,7 +112,8 @@ class ThemeController:
             controls[0].bgcolor = color
 
             for c in controls[1].controls[:-1]:
-                c.content.bgcolor = color + "800"
+                # c.content.bgcolor = color + "800"
+                c.content.bgcolor = ThemeController.get_color(color, 800)
 
         page.client_storage.set("theme_color", color)
         page.update()

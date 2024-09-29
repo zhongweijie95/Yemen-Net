@@ -4,7 +4,7 @@
 import base64
 import flet as ft
 from typing import Callable
-from ..constant import Dialogs
+from ..constant import Dialogs, Refs
 
 
 class CaptchaVerify(ft.BottomSheet):
@@ -87,5 +87,6 @@ class CaptchaVerify(ft.BottomSheet):
             else:
                 self.close()
                 self.callback(data)
+                Refs.users.current.update_list()
         except Exception as err:
             Dialogs.error(err, self.page)

@@ -45,6 +45,9 @@ class CardCredit(ft.Container):
     def hide_credit_state(self):
         self.content.controls[-1].spans[0].visible = False
 
+    def show_credit_state(self):
+        self.content.controls[-1].spans[0].visible = True
+
     def _credit_state(self, value: str, color: str, prefix: str) -> None:
         span = self.content.controls[-1].spans[0]
         span.style.color = color
@@ -69,15 +72,20 @@ class CardCredit(ft.Container):
         def get_value(var):
             return float(var.get("valid_credit").split()[0].strip())
 
-        if old_data:
-            old_value = get_value(old_data)
-            new_value = get_value(data)
+        if not old_data:
+            self.hide_credit_state()
+            return
 
-            if new_value < old_value:
-                self.decrement(UserData.custom_credit(old_value - new_value))
-            elif new_value != old_value:
-                self.increment(UserData.custom_credit(new_value))
-            else:
-                self.hide_credit_state()
+        old_value = get_value(old_data)
+        new_value = get_value(data)
+
+        self.show_credit_state()
+
+        if new_value < old_value:
+            self.decrement(UserData.custom_credit(old_value - new_value))
+        elif new_value > old_value:
+            self.increment(UserData.custom_credit(new_value - old_value))
         else:
             self.hide_credit_state()
+
+        self.update()

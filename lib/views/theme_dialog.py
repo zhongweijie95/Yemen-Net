@@ -30,9 +30,41 @@ class ThemeButtonGroup(ft.Row):
             for color in colors
         ]
 
+        # self.controls.append(
+        #     ft.IconButton(
+        #         icon = ft.icons.ADD,
+        #         on_click=self.open_color_dialog
+        #     )
+        # )
+
+    # def open_color_dialog(self, e: ft.ControlEvent = None) -> str | None:
+    #     color_value = ft.Ref[ft.TextField]()
+
+    #     def on_submit():
+    #         self.select_color(color_value.current.value)
+    #         self.on_change(color_value.current.value)
+
+    #     self.page.open(
+    #         ft.AlertDialog(
+    #             content=ft.TextField(
+    #                 ref=color_value,
+    #                 on_submit=lambda e: on_submit(),
+    #                 text_align="center",
+    #                 text_style=ft.TextStyle(
+    #                     font_family="Monospace"
+    #                 )
+                    
+    #             )
+    #         )
+    #     )
+
     def select_color(self, color: str) -> None:
-        for c in self.controls:
-            c.border = None if c.key != color else ft.border.all(3, c.bgcolor + "100")
+        for i, c in enumerate(self.controls):
+            if i <= len(self.controls) - 1:
+                c.border = None if c.key != color else ft.border.all(3, c.bgcolor + "100")
+            else:
+                c.border = ft.border.all(3, ft.colors.BLACK12)
+
         self.update()
 
     def _on_click(self, e: ft.ControlEvent) -> None:

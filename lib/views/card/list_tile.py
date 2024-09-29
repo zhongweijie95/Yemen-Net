@@ -10,16 +10,19 @@ class CardTitle(ft.ListTile):
         super().__init__()
 
         self.content_padding = ft.padding.only(right=10)
+
         self.title = ft.Text(
             size=14.5,
             color=ft.colors.WHITE,
             text_align="right"
         )
+
         self.subtitle = ft.Text(
             text_align="right",
             color=ft.colors.WHITE70,
             size=14
         )
+
         self.trailing = ft.Stack(
             alignment=ft.alignment.bottom_right,
             controls=[
@@ -29,9 +32,8 @@ class CardTitle(ft.ListTile):
                     height=42
                 ),
                 ft.Badge(
-                    bgcolor=ft.colors.GREEN,
                     small_size=13,
-                    alignment=ft.alignment.bottom_right
+                    bgcolor=ft.colors.GREEN
                 )
             ]
         )

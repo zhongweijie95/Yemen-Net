@@ -3,10 +3,11 @@
 
 import flet as ft
 
+from ...constant import ThemeController
+from ...models.user import User
 from .list_tile import CardTitle
 from .credit import CardCredit
 from .item import CardItem
-from ...models.user import User
  
 
 class Card(ft.GestureDetector):
@@ -33,7 +34,8 @@ class Card(ft.GestureDetector):
                 border_radius=14,
                 alignment=ft.alignment.center,
                 animate=ft.Animation(200, ft.AnimationCurve.LINEAR_TO_EASE_OUT),
-                bgcolor=self.page.theme.color_scheme_seed + "800",
+                # bgcolor=self.page.theme.color_scheme_seed + "800",
+                bgcolor=ThemeController.get_color(self.page.theme.color_scheme_seed, 800),
                 shadow=ft.BoxShadow(
                     spread_radius=-10,
                     blur_radius=8,

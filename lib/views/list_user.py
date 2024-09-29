@@ -11,8 +11,9 @@ from .user_edit import UserViewEdit
 class ListTile(ft.ListTile):
     def __init__(self,
                  atype: int,
-                 title: str, 
+                 title: str,
                  subtitle: str,
+                 verified: bool = False,
                  **kwargs):
         super().__init__(**kwargs)
 
@@ -21,11 +22,25 @@ class ListTile(ft.ListTile):
 
         self.title = ft.Text(value = title, rtl=True)
         self.subtitle = ft.Text(value = subtitle, rtl=True)
-        self.trailing = ft.Image(
-            src = f"/atype/{atype}.png",
-            width=38,
-            height=38
+
+        self.trailing = ft.Stack(
+            expand=True,
+            alignment=ft.alignment.bottom_right,
+            controls=[
+                ft.Image(
+                    src=f"/atype/{atype}.png",
+                    width=38,
+                    height=38
+                ),
+                ft.Image(
+                    src="/verified.svg",
+                    width=14,
+                    height=14,
+                    visible=verified
+                )
+            ]
         )
+
         self.leading = ft.Row(
             controls=[
                 ft.IconButton(
@@ -43,7 +58,7 @@ class ListTile(ft.ListTile):
             spacing=0,
             visible=False
         )
-    
+
     def _set_list_state(self, on: Callable) -> None:
         for c in Refs.users.current.controls:
             c.leading.visible = on(c)
@@ -90,6 +105,7 @@ class UserListView(ft.ListView):
             user.atype,
             user.dname or f"حساب رقم {index}",
             user.username,
+            (user.cookies or user.data) is not None,
             data=user.id
         )
 
