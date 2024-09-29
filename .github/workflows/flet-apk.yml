@@ -91,7 +91,7 @@ jobs:
         --flutter-build-args=--android-project-arg \
         --flutter-build-args=android.buildTypes.release.ndk.abiFilters=armeabi-v7a,arm64-v8a \
         --flutter-build-args=--android-project-arg \
-        --flutter-build-args=android.defaultConfig.ndk.abiFilters=armeabi-v7a,arm64-v8a
+        --flutter-build-args=android.defaultConfig.ndk.abiFilters=armeabi-v7a,arm64-v8a \
         --flutter-build-args=--split-per-abi
 
     - name: Upload APK Artifact
