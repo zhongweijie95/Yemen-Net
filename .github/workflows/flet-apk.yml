@@ -85,7 +85,7 @@ jobs:
         --project="$PROJECT" \
         --flutter-build-args=--release \
         --flutter-build-args=--analyze-size \
-        --flutter-build-args=--target-platform
+        --flutter-build-args=--target-platform \
         --flutter-build-args=android-arm \
         --flutter-build-args=--android-project-arg \
         --flutter-build-args=android.ndk.abiFilters=armeabi-v7a \
