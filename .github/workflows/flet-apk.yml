@@ -85,9 +85,14 @@ jobs:
         --project="$PROJECT" \
         --flutter-build-args=--release \
         --flutter-build-args=--analyze-size \
-        --flutter-build-args=--target-platform=android-arm \
-        --flutter-build-args=--android-project-arg android.ndk.abiFilters=armeabi-v7a \
-        --flutter-build-args=--android-project-arg android.buildTypes.release.ndk.abiFilters=armeabi-v7a
+        --flutter-build-args=--target-platform
+        --flutter-build-args=android-arm \
+        --flutter-build-args=--android-project-arg \
+        --flutter-build-args=android.ndk.abiFilters=armeabi-v7a \
+        --flutter-build-args=--android-project-arg \
+        --flutter-build-args=android.buildTypes.release.ndk.abiFilters=armeabi-v7a \
+        --flutter-build-args=--android-project-arg \
+        --flutter-build-args=android.defaultConfig.ndk.abiFilters=armeabi-v7a
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4.3.4
