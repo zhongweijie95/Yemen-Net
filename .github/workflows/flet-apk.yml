@@ -85,12 +85,14 @@ jobs:
         --project="$PROJECT" \
         --flutter-build-args=--release \
         --flutter-build-args=--split-per-abi \
-        --flutter-build-args=--target-platform=android-arm,android-arm64,android-x64
-
+        --flutter-build-args=--target-platform=android-arm,android-arm64,android-x64 \
+        --flutter-build-args=-Pandroid.ndk.abiFilters= \
+        --flutter-build-args=-Pandroid.useAndroidX=true \
+        --flutter-build-args=-Pandroid.enableJetifier=true
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4.3.4
       with:
         name: apk-build-artifact
-        path: build/apk
+        path: build/
         if-no-files-found: warn
         overwrite: false
